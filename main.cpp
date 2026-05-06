@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <climits>
 
 using namespace std;
 
@@ -35,54 +36,7 @@ void findAllPaths(int current, int finish, const vector<int>& dist,
     path.pop_back();
 }
 
-int main() {
-    int n, m;
-
-    cout << "Numarul varfurilor: "; cin >> n;
-    cout << "Numarul arcelor: "; cin >> m;
-
-    cout << "\nInsert edges (from to capacity):\n ";
-
-    vector<Edge> edges(m);
-
-    for (int i = 0; i < m; i++) {
-        cin >> edges[i].from >> edges[i].to >> edges[i].capacity;
-    }
-
-    int start, finish;
-
-    vector<int> dist(n, INF);
-
-    cout << "Varful start: "; cin >> start;
-    cout << "\nVarful destinatie: " ; cin >> finish;
-
-    dist[start] = 0;
-
-    vector<vector<int>> iterations;
-    iterations.push_back(dist);
-
-    for (int vertex = 0; vertex < n; vertex++) {
-        bool changed = false;
-        vector<int> prevDist = dist;
-
-        for (int i = 0; i < m; i++) {
-            if (edges[i].from == vertex) {
-                int u = edges[i].from;
-                int v = edges[i].to;
-                int w = edges[i].capacity;
-
-                if (prevDist[u] != INF && dist[v] > prevDist[u] + w) {
-                    dist[v] = prevDist[u] + w;
-                    changed = true;
-                }
-            }
-        }
-
-        if (changed) {
-            iterations.push_back(dist);
-        }
-    }
-
+void displayMatrix(int n, vector<vector<int>> &iterations) {
     cout << "\n\nIteration matrix:\n\t";
     for (int i = 0; i < n; i++) {
         cout << 'x' << i << '\t';
@@ -109,6 +63,61 @@ int main() {
 
         cout << '\n';
     }
+}
+
+void relaxEdges(int n, int m, vector<Edge> &edges, vector<int> &dist, vector<vector<int>> &iterations) {
+    for (int vertex = 0; vertex < n; vertex++) {
+        bool changed = false;
+        vector<int> prevDist = dist;
+
+        for (int i = 0; i < m; i++) {
+            if (edges[i].from == vertex) {
+                int u = edges[i].from;
+                int v = edges[i].to;
+                int w = edges[i].capacity;
+
+                if (prevDist[u] != INF && dist[v] > prevDist[u] + w) {
+                    dist[v] = prevDist[u] + w;
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed) {
+            iterations.push_back(dist);
+        }
+    }
+}
+
+int main() {
+    int n, m;
+
+    cout << "Numarul varfurilor: "; cin >> n;
+    cout << "Numarul arcelor: "; cin >> m;
+
+    cout << "\nInsert edges (from to capacity):\n ";
+
+    vector<Edge> edges(m);
+
+    for (int i = 0; i < m; i++) {
+        cin >> edges[i].from >> edges[i].to >> edges[i].capacity;
+    }
+
+    int start, finish;
+
+    vector<int> dist(n, INF);
+
+    cout << "Varful start: "; cin >> start;
+    cout << "\nVarful destinatie: " ; cin >> finish;
+
+    dist[start] = 0;
+
+    vector<vector<int>> iterations;
+    iterations.push_back(dist);
+
+    relaxEdges(n, m, edges, dist, iterations);
+
+    displayMatrix(n, iterations);
 
     if (dist[finish] == INF) {
         cout << "\nDrumul nu exista";

@@ -1,0 +1,3 @@
+/home/kokosik/cpp/ford/cmake-build-debug/CMakeFiles/ford.dir
+/home/kokosik/cpp/ford/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/kokosik/cpp/ford/cmake-build-debug/CMakeFiles/rebuild_cache.dir
